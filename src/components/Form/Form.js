@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Formik, Form, useField } from "formik";
 import * as Yup from "yup";
 
@@ -27,9 +27,32 @@ const Input = ({ label, ...props }) => {
   );
 };
 
+const initalFormValues = {
+  firstName: "",
+  lastName: "",
+  email: "",
+  phoneNumber: "",
+  address: "",
+};
+
 function FormOrder({ onAddToCart, products }) {
+  const [formData, setFormData] = useState(initalFormValues);
+  const [isError, setIsError] = useState(false);
+
+  const handleFormSubmit = (event) => {
+    event.preventDefault();
+
+    if (formData.firstName === "") {
+      return setIsError(true);
+    }
+
+    setFormData(initalFormValues);
+    localStorage.setItem("cart", JSON.stringify([]));
+  };
+
+  console.log(formData);
   return (
-    <Formik
+    /* <Formik
       initialValues={{
         firstName: "",
         lastName: "",
@@ -42,7 +65,7 @@ function FormOrder({ onAddToCart, products }) {
         console.log(values);
       }}
     >
-      <Form className="form">
+      <Form>
         <div>
           <Input label="First Name" name="firstName" type="text" />
         </div>
@@ -59,11 +82,56 @@ function FormOrder({ onAddToCart, products }) {
           <Input label="Adress" name="adress" type="text" />
         </div>
 
-        {/* onClick={() => onAddToCart(product.id, "delete")} */}
-
-        <button type="submit">Checkout</button>
+        <button type="submit" className="form__button">
+          Checkout
+        </button>
       </Form>
     </Formik>
+ */
+    <form onSubmit={handleFormSubmit}>
+      <label>
+        First Name
+        <input
+          type="text"
+          name="firstName"
+          value={formData.firstName}
+          onChange={(event) => {
+            setIsError(false);
+            setFormData((prev) => {
+              return { ...prev, firstName: event.target.value };
+            });
+          }}
+        />
+        {isError && <p className="error">Your name is required!</p>}
+      </label>
+      <label>
+        Last Name
+        <input
+          type="text"
+          name="lastName"
+          value={formData.lastName}
+          onChange={(event) =>
+            setFormData((prev) => {
+              return { ...prev, lastName: event.target.value };
+            })
+          }
+        />
+      </label>
+      <label>
+        Email
+        <input
+          type="text"
+          name="email"
+          value={formData.email}
+          onChange={(event) =>
+            setFormData((prev) => {
+              return { ...prev, email: event.target.value };
+            })
+          }
+        />
+      </label>
+      <button type="submit">Order</button>
+    </form>
   );
 }
 

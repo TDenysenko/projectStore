@@ -15,6 +15,8 @@ function OrderList({ products, onAddToCart }) {
     return item;
   });
 
+  console.log("product list re-render");
+
   const totalPrice = cartDetails.reduce((sum, curr) => {
     return sum + Number(curr.price.replace(" ", "")) * Number(curr.quantity);
   }, 0);
@@ -47,7 +49,7 @@ function OrderList({ products, onAddToCart }) {
           );
         })}
       </ul>
-      <div className="order-list__price">
+      <div>
         Total price: ${totalPrice} for total {cart.length} items
       </div>
     </>
